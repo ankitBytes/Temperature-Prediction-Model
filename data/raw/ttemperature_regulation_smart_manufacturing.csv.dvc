@@ -1,0 +1,5 @@
+outs:
+- md5: 1199e046e0e66f713361f795333b0b2d
+  size: 258892
+  hash: md5
+  path: ttemperature_regulation_smart_manufacturing.csv

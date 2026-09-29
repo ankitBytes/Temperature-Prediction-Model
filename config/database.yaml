@@ -1,0 +1,4 @@
+database:
+  type: sqlite
+  path: "/home/vvdn/Desktop/Projects/Python/Temperature-prediction-model-using-pyspark/data/processed/valid_data/sensor_data.db"
+  table: "sensor_readings"

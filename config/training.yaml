@@ -1,0 +1,7 @@
+model:
+  type: LinearRegression
+  regParam: 0.0
+  elasticNetParam: 0.0
+
+validation:
+  max_mae: 15.0

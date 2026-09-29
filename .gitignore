@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# MLflow local data
+mlruns/
+mlflow/
+*.db
+*.db-journal
+
+# DVC cache
+.dvc/cache/
+
+# OS
+.DS_Store
+
+# Generated/processed data
+data/processed/
+data/data/
