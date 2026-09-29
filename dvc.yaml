@@ -1,0 +1,11 @@
+stages:
+  train:
+    cmd: python scripts/run_training.py
+    deps:
+    - config
+    - data/raw/ttemperature_regulation_smart_manufacturing.csv
+    - pipelines
+    - scripts/run_training.py
+    - src
+    outs:
+    - data/processed/invalid_data
