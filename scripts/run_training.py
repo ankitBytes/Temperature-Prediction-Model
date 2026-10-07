@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from src.data.data_loader import load_sensor_data
+from src.data.data_loader import load_from_all_sources
 from src.data.data_cleaner import validate_reading
 from src.features.feature_engineer import (
     create_temperature_change,
@@ -29,46 +29,76 @@ print(db_path)
 connection = sqlite3.connect(db_path)
 cursor = connection.cursor()
 
+CSV_PATH = "/home/vvdn/Desktop/Projects/Python/Temperature-prediction-model-using-pyspark/data/raw/ttemperature_regulation_smart_manufacturing.csv"
+API_URL = "http://127.0.0.1:8000/sensor"
+
 
 def data_split(df):
 
-    split_window = Window.partitionBy("sensor_id").orderBy("timestamp")
+    split_window = (
+        Window
+        .partitionBy("sensor_id")
+        .orderBy("timestamp")
+    )
 
-    training_df = df.withColumn(
+    # Number each row chronologically within each sensor
+    df = df.withColumn(
         "row_num",
         row_number().over(split_window)
     )
 
-    total_rows = training_df.count()
-
-    train_end = int(total_rows * 0.70)
-    validation_end = train_end + int(total_rows * 0.15)
-
-    train_df = training_df.filter(
-        col("row_num") <= train_end
+    # Calculate total rows for each sensor
+    sensor_counts = (
+        df.groupBy("sensor_id")
+        .count()
+        .withColumnRenamed("count", "total_rows")
     )
 
-    validation_df = training_df.filter(
-        (col("row_num") > train_end) &
-        (col("row_num") <= validation_end)
+    # Attach each sensor's total row count
+    df = df.join(
+        sensor_counts,
+        on="sensor_id",
+        how="left"
     )
 
-    test_df = training_df.filter(
-        col("row_num") > validation_end
+    # Calculate 70/15/15 boundaries for each sensor
+    df = df.withColumn(
+        "train_end",
+        (col("total_rows") * 0.70).cast("int")
     )
 
+    df = df.withColumn(
+        "validation_end",
+        (
+            col("total_rows") * 0.85
+        ).cast("int")
+    )
+
+    # Chronological split per sensor
+    train_df = df.filter(
+        col("row_num") <= col("train_end")
+    )
+
+    validation_df = df.filter(
+        (col("row_num") > col("train_end")) &
+        (col("row_num") <= col("validation_end"))
+    )
+
+    test_df = df.filter(
+        col("row_num") > col("validation_end")
+    )
+
+    # First row of each sensor has no temperature_change
     train_df = train_df.filter(
         col("temperature_change").isNotNull()
     )
 
     feature_columns = [
-            "temperature",
-            "humidity",
-            "temperature_change",
-            "rolling_avg_temperature"
+        "temperature",
+        "humidity",
+        "temperature_change",
+        "rolling_avg_temperature"
     ]
-
-    target_column = "target_temperature"
 
     assembler = VectorAssembler(
         inputCols=feature_columns,
@@ -92,7 +122,7 @@ def main():
     processed_data_path = "data/processed/invalid_data"
 
     # Import the data from .csv file to the spark dataframe
-    df = load_sensor_data(spark)
+    df = load_from_all_sources(spark, CSV_PATH, API_URL, db_path)
 
     # Clean the data by removing the impurities
     valid_df, invalid_df = validate_reading(df)
@@ -140,6 +170,10 @@ def main():
     create_feature_table(connection)
     store_features(connection, feature_df)
     check_features(connection)
+
+    print("Train rows:", train_df.count())
+    print("Validation rows:", validation_df.count())
+    print("Test rows:", test_df.count())
 
     model, validation_predictions = run_training(
         train_df,

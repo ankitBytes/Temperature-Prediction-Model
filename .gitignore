@@ -25,3 +25,6 @@ mlflow/
 # Generated/processed data
 data/processed/
 data/data/
+
+# Folders
+docs/

@@ -1,0 +1,8 @@
+sensor_id,timestamp,temperature,humidity,reasons
+MANUFACTURING_01,2025-02-03T23:39:12.528+05:30,299.5,50.2,Temperature is out of range
+MANUFACTURING_01,2025-02-03T23:44:12.528+05:30,450.5,52.1,Temperature is out of range
+MANUFACTURING_01,2025-02-03T23:49:12.528+05:30,370.4,85.0,Humidity is out of range
+MANUFACTURING_01,2025-02-03T23:54:12.528+05:30,375.8,20.0,Humidity is out of range
+MANUFACTURING_01,,375.4,53.4,Timestamp is missing
+MANUFACTURING_01,2025-02-04T00:24:12.528+05:30,,54.7,Temperature is missing
+MANUFACTURING_01,2025-02-04T00:29:12.528+05:30,378.6,,Humidity is missing

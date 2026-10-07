@@ -5,3 +5,6 @@ model:
 
 validation:
   max_mae: 15.0
+
+monitoring:
+  drift_threshold_percent: 10.0

@@ -1,0 +1,31 @@
+cmd: python scripts/run_training.py
+deps:
+- path: config
+  hash: md5
+  md5: 453bad899a85913e7a8270bb552a1cea.dir
+  size: 262
+  nfiles: 5
+- path: data/raw/ttemperature_regulation_smart_manufacturing.csv
+  hash: md5
+  md5: 1199e046e0e66f713361f795333b0b2d
+  size: 258892
+- path: pipelines
+  hash: md5
+  md5: d36d9ef10fa671e88713a88143401368.dir
+  size: 5471
+  nfiles: 6
+- path: scripts/run_training.py
+  hash: md5
+  md5: 880adf907764b3ef10e26ec48246e50f
+  size: 4043
+- path: src
+  hash: md5
+  md5: 73658a9c6055d972f4aa3b5734e5dfb8.dir
+  size: 1012378
+  nfiles: 37
+outs:
+- path: data/processed/invalid_data
+  hash: md5
+  md5: 199a0b75118abe767e6b712702ba879d.dir
+  size: 611
+  nfiles: 4

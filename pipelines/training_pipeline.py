@@ -34,7 +34,11 @@ def run_training(train_df, validation_df):
             validation_df
         )
 
-        mse, mae = evaluate_model(validation_predictions)
+        mse, mae, rmse = evaluate_model(validation_predictions)
+
+        mlflow.log_metric("validation_mse", mse)
+        mlflow.log_metric("validation_mae", mae)
+        mlflow.log_metric("validation_rmse", rmse)
 
         signature = infer_signature(
             validation_predictions.select("features"),

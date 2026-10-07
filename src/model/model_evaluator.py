@@ -15,7 +15,14 @@ def evaluate_model(predictions_df):
         metricName="mae"
     )
 
+    rmse_evaluator = RegressionEvaluator(
+        labelCol="target_temperature",
+        predictionCol="prediction",
+        metricName="rmse"
+    )
+
     mse = mse_evaluator.evaluate(predictions_df)
     mae = mae_evaluator.evaluate(predictions_df)
+    rmse = rmse_evaluator.evaluate(predictions_df)
 
-    return mse, mae
+    return mse, mae, rmse

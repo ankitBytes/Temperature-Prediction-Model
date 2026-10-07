@@ -67,12 +67,12 @@ def validate_reading(df):
 
     valid_df = df_with_reasons.filter(col("reasons") == "").drop("reasons")
 
-    invalid_df = invalid_df.select(
-        "sensor_id",
-        "timestamp",
-        "temperature",
-        "humidity",
-        "reasons"
-    )
+    # invalid_df = invalid_df.select(
+    #     "sensor_id",
+    #     "timestamp",
+    #     "temperature",
+    #     "humidity",
+    #     "reasons"
+    # )
 
     return valid_df, invalid_df
