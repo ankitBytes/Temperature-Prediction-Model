@@ -9,6 +9,7 @@ env/
 # IDE
 .vscode/
 .idea/
+.claude/
 
 # MLflow local data
 mlruns/
